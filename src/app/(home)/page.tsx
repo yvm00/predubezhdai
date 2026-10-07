@@ -1,10 +1,21 @@
+import ArchiveSection from "./ArchiveSection";
+import ContextSection from "./ContextSection";
 import HeroSection from "./HeroSection";
 
-export default function Home(){
-  return(
-    <div>
-    <HeroSection/>
+export default function Home() {
+  return (
+    <main>
+      <section id="hero">
+        <HeroSection />
+      </section>
 
-    </div>
-  )
+      <section id="context">
+        <ContextSection />
+      </section>
+
+      <section id="archive">
+        <ArchiveSection />
+      </section>
+    </main>
+  );
 }

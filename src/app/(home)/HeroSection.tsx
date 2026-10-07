@@ -10,12 +10,13 @@ export default function HeroSection() {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.playbackRate = 0.7;
+      videoRef.current.playbackRate = 0.6;
     }
   }, []);
 
   return (
     <section
+      id="hero"
       ref={sectionRef}
       className="w-full h-dvh relative  overflow-hidden"
     >
@@ -31,7 +32,7 @@ export default function HeroSection() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover object-[60%_40%] mix-blend-screen "
         >
-          <source src="/video/flower4.webm" type="video/webm" />
+          <source src="/video/flower.webm" type="video/webm" />
         </video>
       </div>
     </section>
