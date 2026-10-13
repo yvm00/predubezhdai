@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${syne.variable} ${inter.variable} ${jost.variable} h-full antialiased`}
     >
-      <body className="font-inter min-h-full flex flex-col ">
+      <body className="font-inter min-h-full flex flex-col">
         <Header />
         {children}
       </body>
