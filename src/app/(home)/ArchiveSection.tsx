@@ -55,11 +55,9 @@ export default function ArchiveSection() {
       };
 
       ScrollTrigger.create({
-        trigger: section,
-        pin: section, 
-        start: 'top top', 
-        end: '+=150%', 
-        pinSpacing: true, 
+        trigger: viewport,
+        start: 'top top',
+        end: '+=100%',
         scrub: true,
         onEnter: () => {
           const maxX = canvas.scrollWidth - viewport.clientWidth;
@@ -77,24 +75,10 @@ export default function ArchiveSection() {
           viewport.removeEventListener('mousemove', updateCamera);
         },
       });
-
-      gsap.fromTo(
-        canvas,
-        { autoAlpha: 0 },
-        {
-          autoAlpha: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-        },
-      );
     }, section);
 
     return () => ctx.revert();
   }, [isDesktop]);
-
-  if (isDesktop === null) {
-    return <section className='min-h-screen bg-white' />;
-  }
 
   return (
     <section
@@ -102,59 +86,70 @@ export default function ArchiveSection() {
       id='archive'
       className='relative w-full bg-white select-none'
     >
-      {isDesktop ? (
-        <div
-          ref={viewportRef}
-          className='relative h-screen w-full overflow-hidden bg-white z-10'
-        >
-          <div
-            ref={canvasRef}
-            className='absolute top-[200px] left-0  w-[160vw] h-[160vh] grid grid-cols-3 grid-rows-[37.86%_26.57%_35.57%] gap-12 p-20 items-center justify-items-center'
-          >
-            {productsData.map((product) => (
-              <Link
-                key={product.id}
-                href={`/product/${product.slug}`}
-                className='group flex aspect-[4/3] w-full h-full items-center justify-center'
-              >
-                <div className='relative w-full h-full mix-blend-multiply transition-transform duration-300 group-hover:scale-105'>
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    sizes='33vw'
-                    priority
-                    className='object-contain'
-                  />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className='grid grid-cols-2 items-start gap-x-4 gap-y-8 px-5 py-24 bg-white text-black'>
-          {productsData.map((product) => (
-            <Link
-              key={product.id}
-              href={`/product/${product.slug}`}
-              className='block bg-neutral-50 p-4 rounded'
+      <div className=''>
+        {
+          isDesktop !== false && (
+            <div
+              ref={viewportRef}
+              className='relative h-screen w-full bg-white z-10'
             >
-              <div className='relative w-full aspect-square mix-blend-multiply'>
-                <Image
-                  src={product.image}
-                  alt={product.title}
-                  fill
-                  sizes='50vw'
-                  className='object-contain'
-                />
+              <div
+                ref={canvasRef}
+                className='absolute top-0 left-0  w-[160vw] h-[160vh] grid grid-cols-3 gap-x-[clamp(24px,_19vw,_500px)] gap-y-[clamp(24px,_6vh,_70px)] grid-rows-[37.86%_26.57%_35.57%]  items-center justify-items-center'
+              >
+                {productsData.map((product, index) => (
+                  <Link
+                    key={product.id}
+                    href={`/product/${product.slug}`}
+                    className='archive-product group flex aspect-[4/3] w-full  h-full items-center justify-center'
+                  >
+                    <div className='relative w-full h-full mix-blend-multiply transition-transform duration-300 group-hover:scale-105'>
+                      <Image
+                        src={product.image}
+                        alt={product.title}
+                        fill
+                        sizes='33vw'
+                        priority
+                        className={`object-contain ${
+                          index % 3 === 0
+                            ? 'object-right'
+                            : index % 3 === 2
+                              ? 'object-left'
+                              : 'object-center'
+                        }`}
+                      />
+                    </div>
+                  </Link>
+                ))}
               </div>
-              <span className='block mt-4 font-mono text-xs uppercase tracking-wider text-neutral-800'>
-                {product.title}
-              </span>
-            </Link>
-          ))}
-        </div>
-      )}
+            </div>
+          )
+          // : (
+          //   <div className='grid grid-cols-2 items-start gap-x-4 gap-y-8 px-5 py-24 bg-white text-black'>
+          //     {productsData.map((product) => (
+          //       <Link
+          //         key={product.id}
+          //         href={`/product/${product.slug}`}
+          //         className='block bg-neutral-50 p-4 rounded'
+          //       >
+          //         <div className='relative w-full aspect-square mix-blend-multiply'>
+          //           <Image
+          //             src={product.image}
+          //             alt={product.title}
+          //             fill
+          //             sizes='50vw'
+          //             className='object-contain'
+          //           />
+          //         </div>
+          //         <span className='block mt-4 font-mono text-xs uppercase tracking-wider text-neutral-800'>
+          //           {product.title}
+          //         </span>
+          //       </Link>
+          //     ))}
+          //   </div>
+          // )
+        }
+      </div>
     </section>
   );
 }

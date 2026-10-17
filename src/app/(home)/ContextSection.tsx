@@ -4,7 +4,7 @@ export default function ContextSection() {
   return (
     <section id='context' className='min-h-screen bg-white'>
       <div className='mx-auto w-full max-w-[1920px] px-5'>
-        <div className='mt-[clamp(96px,25vh,200px)] grid grid-cols-1 md:grid-cols-12 gap-[15px] '>
+        <div className='context-copy mt-5 grid grid-cols-1 md:grid-cols-12 gap-[15px] '>
           <div className='col-span-4 pt-[23px]'>
             <h2 className='text-[48px] font-semibold leading-none tracking-tight'>
               KATARSIS

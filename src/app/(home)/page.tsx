@@ -1,21 +1,16 @@
-import ArchiveSection from "./ArchiveSection";
-import ContextSection from "./ContextSection";
-import HeroSection from "./HeroSection";
+import Transition from '@/src/components/Transition';
+import ArchiveSection from './ArchiveSection';
+import ContextSection from './ContextSection';
+import HeroSection from './HeroSection';
 
 export default function Home() {
   return (
     <main>
-      <section id="hero">
-        <HeroSection />
-      </section>
-
-      <section id="context">
+      <HeroSection />
+      <Transition>
         <ContextSection />
-      </section>
-
-      <section id="archive">
         <ArchiveSection />
-      </section>
+      </Transition>
     </main>
   );
 }
