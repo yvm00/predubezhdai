@@ -1,10 +1,27 @@
+'use client';
+
 import Image from 'next/image';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from 'gsap';
+import { useUIStore } from '@/src/store/useUIStore';
+import { useEffect, useRef } from 'react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ContextSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const setActiveSection = useUIStore((state) => state.setActiveSection);
+
+  useEffect(() => {}, []);
+
   return (
-    <section id='context' className='min-h-screen bg-white'>
-      <div className='mx-auto w-full max-w-[1920px] px-5'>
-        <div className='context-copy mt-5 grid grid-cols-1 md:grid-cols-12 gap-[15px] '>
+    <section
+      id='context'
+      ref={sectionRef}
+      className='w-full h-auto bg-white select-none'
+    >
+      <div className='mx-auto w-full max-w-[1920px] px-5  py-16 lg:py-24 flex flex-col gap-12 lg:gap-16'>
+        <div className='context-copy mt-5 grid grid-cols-1 md:grid-cols-12 gap-[15px] items-start '>
           <div className='col-span-4 pt-[23px]'>
             <h2 className='text-[48px] font-semibold leading-none tracking-tight'>
               KATARSIS

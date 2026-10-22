@@ -1,6 +1,10 @@
-"use client";
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+'use client';
+import { useEffect, useRef } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from 'gsap';
+import { useUIStore } from '@/src/store/useUIStore';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -8,21 +12,32 @@ export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const textElementsRef = useRef<HTMLDivElement>(null);
 
+  const setActiveSection = useUIStore((state) => state.setActiveSection);
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.6;
     }
+
+    ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: 'top top',
+      end: '+=95%',
+
+      onLeave: () => setActiveSection('context'),
+      onEnterBack: () => setActiveSection('hero'),
+    });
   }, []);
 
   return (
     <section
-      id="hero"
+      id='hero'
       ref={sectionRef}
-      className="w-full h-dvh relative  overflow-hidden"
+      className='w-full h-dvh relative  overflow-hidden'
     >
       <div
         ref={videoContainerRef}
-        className="absolute inset-0 w-full h-full overflow-hidden"
+        className='absolute inset-0 w-full h-full overflow-hidden'
       >
         <video
           ref={videoRef}
@@ -30,9 +45,9 @@ export default function HeroSection() {
           loop
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover object-[60%_40%] mix-blend-screen "
+          className='absolute inset-0 w-full h-full object-cover object-[60%_40%] mix-blend-screen '
         >
-          <source src="/video/flower.webm" type="video/webm" />
+          <source src='/video/flower.webm' type='video/webm' />
         </video>
       </div>
     </section>
