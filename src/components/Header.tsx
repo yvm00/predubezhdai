@@ -13,7 +13,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 p-5 select-none pointer-events-none  ${activeSection === 'hero' ? 'bg-transparent text-white' : 'bg-white/75 text-black backdrop-blur-sm'}`}
+      className={`fixed top-0 inset-x-0 z-50 px-5 pt-5 select-none pointer-events-none  ${activeSection === 'hero' ? 'bg-transparent text-white' : 'text-black backdrop-blur-sm'}`}
     >
       <div className='flex items-center justify-between'>
         <p className='font-syne text-[20px]'>PREDUBEZHDAI</p>

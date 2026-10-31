@@ -5,10 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
 import useIsDesktop from '@/src/hooks/useIsDesktop';
-import { productsData } from '@/src/data/productsData';
 import { useUIStore } from '@/src/store/useUIStore';
+import { Product } from '@/src/types/product';
 
-export default function ArchiveSection() {
+export default function ArchiveSection({ products }: { products: Product[] }) {
   const isDesktop = useIsDesktop();
   const activeSection = useUIStore((state) => state.activeSection);
 
@@ -25,12 +25,18 @@ export default function ArchiveSection() {
 
     let isListening = false;
 
-    const moveX = gsap.quickTo(canvas, 'x', { duration: 0.8, ease: 'power3.out' });
-    const moveY = gsap.quickTo(canvas, 'y', { duration: 0.8, ease: 'power3.out' });
+    const moveX = gsap.quickTo(canvas, 'x', {
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+    const moveY = gsap.quickTo(canvas, 'y', {
+      duration: 0.8,
+      ease: 'power3.out',
+    });
 
     const updateCamera = (event: MouseEvent) => {
       const bounds = viewport.getBoundingClientRect();
-      
+
       const progressX = (event.clientX - bounds.left) / bounds.width - 0.5;
       const progressY = (event.clientY - bounds.top) / bounds.height - 0.5;
 
@@ -69,22 +75,29 @@ export default function ArchiveSection() {
   }, [isDesktop, activeSection]);
 
   return (
-    <section ref={sectionRef} id='archive' className='relative w-full bg-white select-none'>
+    <section
+      ref={sectionRef}
+      id='archive'
+      className='relative w-full bg-white select-none'
+    >
       {isDesktop !== false && (
-        <div ref={viewportRef} className='relative h-screen w-full bg-white z-10 overflow-hidden'>
+        <div
+          ref={viewportRef}
+          className='relative h-screen w-full bg-white z-10 overflow-hidden'
+        >
           <div
             ref={canvasRef}
             className='absolute top-0 left-0 w-[160vw] h-[160vh] grid grid-cols-3 gap-x-[clamp(24px,_19vw,_500px)] gap-y-[clamp(24px,_6vh,_70px)] grid-rows-[37.86%_26.57%_35.57%] items-center justify-items-center'
           >
-            {productsData.map((product, index) => (
+            {products.map((product, index) => (
               <Link
                 key={product.id}
-                href={`/product/${product.slug}`}
+                href={`/archive/${product.slug}`}
                 className='archive-product group flex aspect-[4/3] w-full h-full items-center justify-center'
               >
                 <div className='relative w-full h-full mix-blend-multiply transition-transform duration-300 group-hover:scale-105'>
                   <Image
-                    src={product.image}
+                    src={product.images.archiveImage}
                     alt={product.title}
                     fill
                     sizes='33vw'
