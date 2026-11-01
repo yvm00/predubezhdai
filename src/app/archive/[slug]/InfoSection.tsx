@@ -13,51 +13,52 @@ export default function InfoSection({ product }: { product: Product }) {
   ];
 
   return (
-    <section id='archive' ref={sectionRef} className='w-full min-h-screen bg-white text-black select-none flex items-center'>
-      <div className='grid grid-rows-2 lg:grid-rows-none lg:grid-cols-2 w-full h-full gap-5 pt-20 pb-5 lg:gap-0  max-w-[1920px] mx-auto items-center '>
-        <div className='flex items-center justify-center w-full h-full'>
-          <div
-            className='relative w-full h-full max-h-[45vh] aspect-[3/4] 
-                  lg:max-h-[85vh]'
-          >
+    <section className='min-h-dvh w-full bg-white text-black select-none px-4 pt-5 md:pt-20 pb-10 lg:min-h-dvh lg:px-5 lg:py-0 lg:flex lg:items-center'>
+
+      <div className='mx-auto grid w-full max-w-[1440px] grid-cols-[2fr_1fr] lg:grid-cols-2 lg:grid-rows-2 lg:h-full lg:max-h-[85vh] items-center gap-y-[50px] lg:gap-x-[15px] lg:gap-y-[50px]'>
+        
+        <div className='col-span-1 flex items-center justify-center lg:row-span-2 lg:col-span-1'>
+          <div className='relative w-full h-full max-h-[55vh] aspect-[3/4] lg:max-h-[85vh]'>
             <Image
               src={product.images.productMainImage}
               alt={product.title}
               fill
               priority
-              sizes='(max-width: 768px) 320px, 530px'
+              sizes='(max-width: 1023px) 100vw, 50vw'
               className='object-contain'
             />
           </div>
         </div>
 
-        <div className='grid grid-rows-2 h-full pr-5 gap-5 lg:gap-0 '>
-          <div className='flex justify-center lg:justify-end  gap-[10px] w-full'>
-            {macroImages.map((imgSrc, index) => (
-              <div
-                key={index}
-                className='relative aspect-square overflow-hidden max-w-[100px] lg:max-w-[200px]'
-              >
-                <Image
-                  src={imgSrc}
-                  alt={`macro-${index}`}
-                  fill
-                  priority
-                  sizes='(max-width: 1024px) 150px, 200px'
-                  className='object-contain'
-                />
-              </div>
-            ))}
-          </div>
-          <div className='grid grid-cols-12 items-start content-start gap-[32px]'>
-            <span className='col-span-2 text-neutral-400'>How to use</span>
-            <p className='col-span-10'>{product.infoText.howToUse}</p>
-            <span className='col-span-2 text-neutral-400'>Ingredients</span>
-            <p className='col-span-10 '>{product.infoText.ingredients}</p>
-            <span className='col-span-2 text-neutral-400 '>Shelf life</span>
-            <p className='col-span-10 '>{product.infoText.shelfLife}</p>
-          </div>
+        <div className='col-span-1 grid grid-cols-1 lg:flex lg:justify-end gap-[10px] w-full lg:row-start-1 lg:col-start-2 lg:items-center'>
+          {macroImages.map((imgSrc, index) => (
+            <div
+              key={index}
+              className='relative aspect-square overflow-hidden max-w-[100px] lg:max-w-[200px] lg:w-full'
+            >
+              <Image
+                src={imgSrc}
+                alt={`macro-${index}`}
+                fill
+                priority
+                sizes='(max-width: 1023px) 100vw, 50vw'
+                className='object-contain'
+              />
+            </div>
+          ))}
         </div>
+
+        <div className='col-span-2 grid grid-cols-1 md:gap-[32px] leading-[1.25] md:col-span-5 md:grid-cols-[2fr_10fr] md:gap-x-[15px] lg:row-start-2 lg:col-start-2 lg:col-span-1 lg:content-start'>         
+            <span className='text-neutral-400 pb-[15px] md:p-0'>How to use</span>
+            <p>{product.infoText.howToUse}</p>      
+         
+            <span className='text-neutral-400 pt-[32px] pb-[15px] md:p-0'>Ingredients</span>
+            <p>{product.infoText.ingredients}</p>       
+
+            <span className='text-neutral-400 pt-[32px] pb-[15px] md:p-0'>Shelf life</span>
+            <p>{product.infoText.shelfLife}</p>
+        </div>
+
       </div>
     </section>
   );
