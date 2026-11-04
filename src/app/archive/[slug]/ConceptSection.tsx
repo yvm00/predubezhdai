@@ -53,7 +53,7 @@ export default function ConceptSection({ product }: { product: Product }) {
             <div className='col-span-10 xl:col-span-8 space-y-[32px] lg:space-y-[54px]'>
               <p>{product.conceptText.concept1}</p>
               <p>{product.conceptText.concept2}</p>
-              <p>{product.conceptText.notes}</p>
+              {/* <p>{product.conceptText.notes}</p> */}
             </div>
           </div>
         </div>

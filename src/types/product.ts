@@ -12,10 +12,16 @@ export interface ProductImages {
   macroImages: MacroImages;
 }
 
+export interface Notes {
+  top: string;
+  heart: string;
+  base: string;
+}
+
 export interface ConceptText {
   concept1: string;
   concept2?: string;
-  notes?: string;
+  notes?: Notes;
 }
 
 export interface InfoText {

@@ -27,7 +27,7 @@ export default function Transition({ children }: Props) {
 
     const mm = gsap.matchMedia();
 
-    mm.add('(min-width: 1024px)', () => {
+    mm.add('(min-width: 300px)', () => {
       gsap.set(context, {
         position: 'relative',
         width: '100%',

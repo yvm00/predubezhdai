@@ -1,78 +1,72 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import gsap from 'gsap';
-import useIsDesktop from '@/src/hooks/useIsDesktop';
+
 import { useUIStore } from '@/src/store/useUIStore';
 import { Product } from '@/src/types/product';
+import useBreakpoint from '@/src/hooks/useIsDesktop';
+import { useArchiveDesktop } from '@/src/hooks/useArchiveDesktop';
+import { useArchiveMobile } from '@/src/hooks/useArchiveMobile';
+
+const canvasBaseClass = `
+  archive-canvas
+  absolute top-0 left-0
+  grid grid-cols-3
+  items-center justify-items-center
+`;
+
+const productClass = `
+  archive-product group
+  flex items-center justify-center
+  w-full h-full
+`;
+
+const imageClass = `
+  relative w-full h-full
+  mix-blend-multiply
+  transition-transform duration-300
+  group-hover:scale-105
+`;
 
 export default function ArchiveSection({ products }: { products: Product[] }) {
-  const isDesktop = useIsDesktop();
+  const breakpoint = useBreakpoint();
   const activeSection = useUIStore((state) => state.activeSection);
 
   const sectionRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!isDesktop) return;
+  useArchiveDesktop({
+    breakpoint,
+    activeSection,
+    viewportRef,
+    canvasRef,
+  });
 
-    const viewport = viewportRef.current;
-    const canvas = canvasRef.current;
-    if (!viewport || !canvas) return;
+  useArchiveMobile({
+    breakpoint,
+    activeSection,
+    viewportRef,
+    canvasRef,
+  });
 
-    let isListening = false;
+  const isDesktop = breakpoint === 'desktop';
 
-    const moveX = gsap.quickTo(canvas, 'x', {
-      duration: 0.8,
-      ease: 'power3.out',
-    });
-    const moveY = gsap.quickTo(canvas, 'y', {
-      duration: 0.8,
-      ease: 'power3.out',
-    });
-
-    const updateCamera = (event: MouseEvent) => {
-      const bounds = viewport.getBoundingClientRect();
-
-      const progressX = (event.clientX - bounds.left) / bounds.width - 0.5;
-      const progressY = (event.clientY - bounds.top) / bounds.height - 0.5;
-
-      const maxX = canvas.clientWidth - viewport.clientWidth;
-      const maxY = canvas.clientHeight - viewport.clientHeight;
-
-      moveX(-maxX / 2 - progressX * maxX);
-      moveY(-maxY / 2 - progressY * maxY);
-    };
-
-    if (activeSection === 'archive') {
-      const maxX = canvas.scrollWidth - viewport.clientWidth;
-      const maxY = canvas.scrollHeight - viewport.clientHeight;
-
-      gsap.killTweensOf(canvas);
-      gsap.set(canvas, {
-        x: -maxX / 2,
-        y: -maxY / 2,
-      });
-
-      if (!isListening) {
-        window.addEventListener('mousemove', updateCamera);
-        isListening = true;
-      }
-    } else {
-      if (isListening) {
-        window.removeEventListener('mousemove', updateCamera);
-        isListening = false;
-      }
-      gsap.to(canvas, { x: '-30vw', y: '-30vh', duration: 0.5 });
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', updateCamera);
-    };
-  }, [isDesktop, activeSection]);
+  const canvasLayout = isDesktop
+    ? `
+      w-[160vw] h-[160dvh]
+      grid-rows-[37.86%_26.57%_35.57%]
+      gap-x-[clamp(24px,_19vw,_500px)]
+      gap-y-[clamp(24px,_6vh,_70px)]
+    `
+    : `
+      w-[180vw] h-max
+      grid-rows-[42vh_42vh_42vh]
+      gap-x-[6vw]
+      gap-y-[15vw]
+    `;
 
   return (
     <section
@@ -80,42 +74,63 @@ export default function ArchiveSection({ products }: { products: Product[] }) {
       id='archive'
       className='relative w-full bg-white select-none'
     >
-      {isDesktop !== false && (
+      <div
+        ref={viewportRef}
+        className={`
+          relative h-dvh w-full
+          overflow-hidden bg-white z-10
+          ${!isDesktop ? 'touch-none' : ''}
+        `}
+      >
         <div
-          ref={viewportRef}
-          className='relative h-screen w-full bg-white z-10 overflow-hidden'
+          ref={canvasRef}
+          className={`${canvasBaseClass} ${canvasLayout}`}
+          style={
+            !isDesktop
+              ? {
+                  top: '50%',
+                  left: '50%',
+                  transform:
+                    'translate(-50%, -50%) scale(var(--mesh-scale, 1))',
+                  transformOrigin: 'center center',
+                }
+              : undefined
+          }
         >
-          <div
-            ref={canvasRef}
-            className='absolute top-0 left-0 w-[160vw] h-[160vh] grid grid-cols-3 gap-x-[clamp(24px,_19vw,_500px)] gap-y-[clamp(24px,_6vh,_70px)] grid-rows-[37.86%_26.57%_35.57%] items-center justify-items-center'
-          >
-            {products.map((product, index) => (
-              <Link
-                key={product.id}
-                href={`/archive/${product.slug}`}
-                className='archive-product group flex aspect-[4/3] w-full h-full items-center justify-center'
-              >
-                <div className='relative w-full h-full mix-blend-multiply transition-transform duration-300 group-hover:scale-105'>
-                  <Image
-                    src={product.images.archiveImage}
-                    alt={product.title}
-                    fill
-                    sizes='33vw'
-                    priority
-                    className={`object-contain ${
+          {products.map((product, index) => (
+            <Link
+              key={product.id}
+              href={`/archive/${product.slug}`}
+              draggable={false}
+              className={`
+                ${productClass}
+                ${isDesktop ? 'aspect-[4/3]' : ''}
+              `}
+            >
+              <div className={imageClass}>
+                <Image
+                  src={product.images.archiveImage}
+                  alt={product.title}
+                  fill
+                  sizes='60vw'
+                  priority
+                  draggable={false}
+                  className={`
+                    object-contain
+                    ${
                       index % 3 === 0
                         ? 'object-right'
                         : index % 3 === 2
                           ? 'object-left'
                           : 'object-center'
-                    }`}
-                  />
-                </div>
-              </Link>
-            ))}
-          </div>
+                    }
+                  `}
+                />
+              </div>
+            </Link>
+          ))}
         </div>
-      )}
+      </div>
     </section>
   );
 }

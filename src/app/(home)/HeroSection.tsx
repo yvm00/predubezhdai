@@ -1,55 +1,62 @@
 'use client';
+
 import { useEffect, useRef } from 'react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { gsap } from 'gsap';
 import { useUIStore } from '@/src/store/useUIStore';
+import useBreakpoint from '@/src/hooks/useIsDesktop';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const textElementsRef = useRef<HTMLDivElement>(null);
 
   const setActiveSection = useUIStore((state) => state.setActiveSection);
+  const breakpoint = useBreakpoint();
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.6;
-    }
-
-    ScrollTrigger.create({
+    const trigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
       end: '+=95%',
-
       onLeave: () => setActiveSection('context'),
       onEnterBack: () => setActiveSection('hero'),
     });
-  }, []);
+
+    return () => trigger.kill();
+  }, [setActiveSection]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video || breakpoint === null) return;
+
+    video.src = breakpoint === 'desktop' || breakpoint === 'tablet'
+      ? '/video/flower-desktop.webm'
+      : '/video/flower-mobile.webm';
+
+    video.load();
+    video.playbackRate = 0.6;
+    video.play().catch(() => {});
+  }, [breakpoint]);
 
   return (
     <section
       id='hero'
       ref={sectionRef}
-      className='w-full h-dvh relative  overflow-hidden'
+      className='relative h-dvh w-full overflow-hidden'
     >
-      <div
-        ref={videoContainerRef}
-        className='absolute inset-0 w-full h-full overflow-hidden'
-      >
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className='absolute inset-0 w-full h-full object-cover object-[60%_40%] mix-blend-screen '
-        >
-          <source src='/video/flower.webm' type='video/webm' />
-        </video>
-      </div>
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className={`absolute inset-0 h-full w-full object-cover mix-blend-screen ${
+          breakpoint === 'desktop' || breakpoint === 'tablet' ? 'object-[60%_40%]' : 'object-center'
+        }`}
+      />
     </section>
   );
 }
