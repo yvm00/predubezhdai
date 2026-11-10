@@ -17,7 +17,7 @@ export default async function Page({ params }: Props) {
   }
 
   return (
-    <main className='w-full'>
+    <main className='w-full realtive'>
       <ConceptSection product = {product}/>
       <InfoSection product = {product} />
     </main>

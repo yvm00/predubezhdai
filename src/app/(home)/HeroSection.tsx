@@ -5,11 +5,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { gsap } from 'gsap';
 import { useUIStore } from '@/src/store/useUIStore';
 import useBreakpoint from '@/src/hooks/useIsDesktop';
-
 gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const setActiveSection = useUIStore((state) => state.setActiveSection);
@@ -17,7 +16,7 @@ export default function HeroSection() {
 
   useEffect(() => {
     const trigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
+      trigger: heroRef.current,
       start: 'top top',
       end: '+=95%',
       onLeave: () => setActiveSection('context'),
@@ -32,9 +31,10 @@ export default function HeroSection() {
 
     if (!video || breakpoint === null) return;
 
-    video.src = breakpoint === 'desktop' || breakpoint === 'tablet'
-      ? '/video/flower-desktop.webm'
-      : '/video/flower-mobile.webm';
+    video.src =
+      breakpoint === 'desktop' || breakpoint === 'tablet'
+        ? '/video/flower-desktop.webm'
+        : '/video/flower-mobile.webm';
 
     video.load();
     video.playbackRate = 0.6;
@@ -44,8 +44,8 @@ export default function HeroSection() {
   return (
     <section
       id='hero'
-      ref={sectionRef}
-      className='relative h-dvh w-full overflow-hidden'
+      ref={heroRef}
+      className='sticky top-0 z-0 h-dvh w-full overflow-hidden'
     >
       <video
         ref={videoRef}
@@ -54,7 +54,9 @@ export default function HeroSection() {
         muted
         playsInline
         className={`absolute inset-0 h-full w-full object-cover mix-blend-screen ${
-          breakpoint === 'desktop' || breakpoint === 'tablet' ? 'object-[60%_40%]' : 'object-center'
+          breakpoint === 'desktop' || breakpoint === 'tablet'
+            ? 'object-[60%_40%]'
+            : 'object-center'
         }`}
       />
     </section>

@@ -7,9 +7,11 @@ import { productsData } from '@/src/data/productsData';
 export default function Home() {
   return (
     <main>
-      <HeroSection />
       <Transition>
-        <ContextSection />
+        <div className='relative'>
+          <HeroSection />
+          <ContextSection />
+        </div>
         <ArchiveSection products={productsData} />
       </Transition>
     </main>
