@@ -17,35 +17,16 @@ export default function Header() {
     archive: 'archive',
   };
 
-  const handleArchiveClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    if (window.location.pathname !== '/') {
-      window.location.href = '/#archive';
-      return;
-    }
-
-    const context = document.getElementById('context');
-    if (!context) return;
-
-    const trigger = ScrollTrigger.getAll().find(
-      (trigger) => trigger.trigger === context,
-    );
-
-    if (!trigger) return;
-
-    window.scrollTo({
-      top: trigger.end + 1,
-      behavior: 'smooth',
-    });
-  };
-
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 px-5 pt-5 select-none  ${activeSection === 'hero' ? 'bg-transparent text-white' : 'text-black backdrop-blur-sm'}`}
     >
       <div className='flex items-center justify-between'>
-        <Link href={`/`} onClick={() => setActiveSection('hero')} className='font-syne text-[20px] hover:text-red-500'>
+        <Link
+          href={`/`}
+          onClick={() => setActiveSection('hero')}
+          className='font-syne text-[20px] hover:text-red-500'
+        >
           PREDUBEZHDAI
         </Link>
         <Link

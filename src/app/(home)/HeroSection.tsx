@@ -12,10 +12,13 @@ export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const setActiveSection = useUIStore((state) => state.setActiveSection);
+  const setCursorSection = useUIStore((state) => state.setCursorSection);
   const breakpoint = useBreakpoint();
 
   useEffect(() => {
-    const trigger = ScrollTrigger.create({
+    setCursorSection('hero');
+
+    const headerTrigger = ScrollTrigger.create({
       trigger: heroRef.current,
       start: 'top top',
       end: '+=95%',
@@ -23,8 +26,19 @@ export default function HeroSection() {
       onEnterBack: () => setActiveSection('hero'),
     });
 
-    return () => trigger.kill();
-  }, [setActiveSection]);
+    const cursorTrigger = ScrollTrigger.create({
+      trigger: heroRef.current,
+      start: 'top top',
+      end: '+=35%',
+      onLeave: () => setCursorSection('context'),
+      onEnterBack: () => setCursorSection('hero'),
+    });
+
+    return () => {
+      headerTrigger.kill();
+      cursorTrigger.kill();
+    };
+  }, [setActiveSection, setCursorSection]);
 
   useEffect(() => {
     const video = videoRef.current;

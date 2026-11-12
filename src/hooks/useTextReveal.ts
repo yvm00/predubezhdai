@@ -3,8 +3,9 @@
 import { useLayoutEffect, RefObject } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 interface UseTextRevealProps {
   trigger?: string;
@@ -19,46 +20,78 @@ export default function useTextReveal(
     trigger,
     start = 'top 75%',
     duration = 0.65,
-    delay = 0.15,
+    delay = 0.2,
   }: UseTextRevealProps = {},
 ) {
   useLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    let titleSplit: SplitText | undefined;
+    let textSplit: SplitText | undefined;
+
     const ctx = gsap.context(() => {
-      const titleLines = container.querySelectorAll('.reveal-title');
-      const textLines = container.querySelectorAll('.reveal-text');
+      const titles = container.querySelectorAll('.reveal-title');
+      const texts = container.querySelectorAll('.reveal-text');
 
-      const elements = [...titleLines, ...textLines];
+      if (!titles.length && !texts.length) return;
 
-      if (!elements.length) return;
+      if (titles.length) {
+        titleSplit = SplitText.create(titles, {
+          type: 'chars',
+          mask: 'chars',
+        });
+      }
 
-      gsap.set(elements, {
-        yPercent: 110,
-      });
+      if (texts.length) {
+        textSplit = SplitText.create(texts, {
+          type: 'lines',
+          mask: 'lines',
+        });
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: trigger ? container.querySelector(trigger) : container,
-          start,
-          once: true,
+          start,          
         },
       });
 
-      tl.to(titleLines, {
-        yPercent: 0,
-        duration,
-        ease: 'power3.out',
-      }, 0);
+      if (titleSplit) {
+        tl.fromTo(
+          titleSplit.chars,
+          {
+            autoAlpha: 0,
+          },
+          {
+            autoAlpha: 1,
+            duration: 0.05,
+            stagger: 0.055,
+            ease: 'power3.out',
+          },
+          0,
+        );
+      }
 
-      tl.to(textLines, {
-        yPercent: 0,
-        duration: duration * 0.85,
-        ease: 'power3.out',
-      }, delay);
+      if (textSplit) {
+        tl.from(
+          textSplit.lines,
+          {
+            yPercent: 110,
+            autoAlpha: 0,
+            duration: duration * 0.85,
+            stagger: 0.12,
+            ease: 'power3.out',
+          },
+          delay,
+        );
+      }
     }, container);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      titleSplit?.revert();
+      textSplit?.revert();
+    };
   }, [containerRef, trigger, start, duration, delay]);
 }

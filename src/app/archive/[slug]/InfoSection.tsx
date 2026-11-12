@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Product } from '@/src/types/product';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import useTextReveal from '@/src/hooks/useTextReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,33 +18,15 @@ export default function InfoSection({ product }: { product: Product }) {
     product.images.macroImages.macro3,
   ];
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const elements = gsap.utils.toArray<HTMLElement>('.reveal-text');
-
-      gsap.set(elements, { yPercent: 110 });
-
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 85%',
-            once: true,
-          },
-        })
-        .to(elements, {
-          yPercent: 0,
-          duration: 0.75,
-          stagger: 0.05,
-          ease: 'power3.out',
-        });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  useTextReveal(sectionRef, {
+    start: 'top 75%',
+    duration: 0.75,
+    delay: 0.15,
+  });
 
   return (
     <section
+      id='info'
       ref={sectionRef}
       className='lg:relative lg:z-10 min-h-dvh w-full bg-white text-black select-none px-4 pt-5 md:pt-20 pb-10 lg:min-h-dvh lg:px-5 lg:py-0 lg:flex lg:items-center'
     >

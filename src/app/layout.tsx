@@ -3,6 +3,7 @@ import { Inter, Syne, Jost } from "next/font/google";
 
 import "./globals.css";
 import Header from "../components/Header";
+import CustomCursor from "../components/cursor/CustomCursor";
 
 const syne = Syne({
   variable: "--font-syne",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="font-inter min-h-full flex flex-col">
         <Header />
+        <CustomCursor/>
         {children}
       </body>
     </html>

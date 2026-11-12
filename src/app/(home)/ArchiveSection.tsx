@@ -109,6 +109,7 @@ export default function ArchiveSection({ products }: { products: Product[] }) {
             >
               <div className={imageClass}>
                 <Image
+                  data-cursos='hover'
                   src={product.images.archiveImage}
                   alt={product.title}
                   fill

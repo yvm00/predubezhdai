@@ -8,11 +8,13 @@ import { useEffect, useRef } from 'react';
 
 export default function ConceptSection({ product }: { product: Product }) {
   const setActiveSection = useUIStore((state) => state.setActiveSection);
+  const setCursorSection = useUIStore((state) => state.setCursorSection);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setActiveSection('archive');
-  }, [setActiveSection]);
+    setCursorSection('archive');
+  }, [setActiveSection, setCursorSection]);
 
   useTextReveal(sectionRef, {
     start: 'top 75%',
@@ -22,6 +24,7 @@ export default function ConceptSection({ product }: { product: Product }) {
 
   return (
     <section
+      id='concept'
       ref={sectionRef}
       className='lg:sticky lg:top-0 lg:z-0 flex min-h-dvh w-full items-center overflow-hidden bg-white text-black select-none'
     >
@@ -37,13 +40,13 @@ export default function ConceptSection({ product }: { product: Product }) {
           />
           <div className='absolute bottom-0 left-0 flex w-full items-center justify-between p-5 text-white'>
             <div className='overflow-hidden'>
-              <h1 className='reveal-title text-lg font-light sm:text-xl xl:text-[32px]'>
+              <h1 className='reveal-text text-lg font-light sm:text-xl xl:text-[32px]'>
                 {product.title}
               </h1>
             </div>
 
             <div className='overflow-hidden'>
-              <p className='reveal-title text-lg font-light sm:text-xl xl:text-[32px]'>
+              <p className='reveal-text text-lg font-light sm:text-xl xl:text-[32px]'>
                 {product.volume}
               </p>
             </div>
@@ -65,7 +68,9 @@ export default function ConceptSection({ product }: { product: Product }) {
 
           <div className='grid lg:grid-cols-12 items-start gap-4 md:gap-0'>
             <div className='overflow-hidden col-span-4 md:col-span-2'>
-              <span className='reveal-text block text-[16px] text-neutral-400 font-medium'>Concept</span>
+              <span className='reveal-text block text-[16px] text-neutral-400 font-medium'>
+                Concept
+              </span>
             </div>
 
             <div className='col-span-10 xl:col-span-8 space-y-[32px] lg:space-y-[54px]'>
