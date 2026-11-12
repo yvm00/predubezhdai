@@ -1,7 +1,6 @@
 import { create } from 'zustand';
+import { SectionId } from '../types/sections';
 
-export type SectionId = 'hero' | 'context' | 'archive';
-export type CursorTheme = 'light' | 'dark';
 
 interface UIState {
   activeSection: SectionId;

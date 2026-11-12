@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import { Product } from '@/src/types/product';
 import { gsap } from 'gsap';

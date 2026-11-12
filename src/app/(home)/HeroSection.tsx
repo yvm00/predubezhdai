@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { gsap } from 'gsap';
 import { useUIStore } from '@/src/store/useUIStore';
@@ -15,23 +15,26 @@ export default function HeroSection() {
   const setCursorSection = useUIStore((state) => state.setCursorSection);
   const breakpoint = useBreakpoint();
 
-  useEffect(() => {
-    setCursorSection('hero');
-
+  useLayoutEffect(() => {
     const headerTrigger = ScrollTrigger.create({
       trigger: heroRef.current,
-      start: 'top top',
-      end: '+=95%',
-      onLeave: () => setActiveSection('context'),
-      onEnterBack: () => setActiveSection('hero'),
+      start: 'top center',
+      end: 'bottom center',
+      onToggle: (self) => {
+        if (self.isActive) setActiveSection('hero');
+      },
     });
 
     const cursorTrigger = ScrollTrigger.create({
       trigger: heroRef.current,
       start: 'top top',
       end: '+=35%',
+      onEnter: () => setCursorSection('hero'),
       onLeave: () => setCursorSection('context'),
-      onEnterBack: () => setCursorSection('hero'),
+      onEnterBack: () => {
+        setCursorSection('hero');
+        setActiveSection('hero');
+      },
     });
 
     return () => {

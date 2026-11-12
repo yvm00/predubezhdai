@@ -5,17 +5,33 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { gsap } from 'gsap';
 import { useLayoutEffect, useRef } from 'react';
 import useTextReveal from '@/src/hooks/useTextReveal';
+import { useUIStore } from '@/src/store/useUIStore';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function ContextSection() {
   const contextRef = useRef<HTMLDivElement>(null);
+  const setActiveSection = useUIStore((state) => state.setActiveSection);
 
   useTextReveal(contextRef, {
     start: 'top 75%',
     duration: 0.75,
     delay: 0.15,
   });
+
+  useLayoutEffect(() => {
+    const contextTrigger = ScrollTrigger.create({
+      trigger: contextRef.current,
+      start: 'top center',
+      end: 'bottom center',
+      onToggle: (self) => {
+        if (self.isActive) setActiveSection('context');
+      },
+    });
+    return () => {
+      contextTrigger.kill();
+    };
+  }, [setActiveSection]);
 
   return (
     <section

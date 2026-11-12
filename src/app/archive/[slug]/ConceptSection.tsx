@@ -4,16 +4,32 @@ import useTextReveal from '@/src/hooks/useTextReveal';
 import { useUIStore } from '@/src/store/useUIStore';
 import { Product } from '@/src/types/product';
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from 'gsap';
+import { useLayoutEffect, useRef } from 'react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ConceptSection({ product }: { product: Product }) {
   const setActiveSection = useUIStore((state) => state.setActiveSection);
   const setCursorSection = useUIStore((state) => state.setCursorSection);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setActiveSection('archive');
-    setCursorSection('archive');
+  useLayoutEffect(() => {
+    setActiveSection('concept');
+    setCursorSection('concept')
+
+    const conceptTrigger = ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: 'top top',
+      end: '+=95%',
+      onLeave: () => setActiveSection('info'),
+      onEnterBack: () => setActiveSection('concept'),
+    });
+
+    return () => {
+      conceptTrigger.kill();
+    };
   }, [setActiveSection, setCursorSection]);
 
   useTextReveal(sectionRef, {
